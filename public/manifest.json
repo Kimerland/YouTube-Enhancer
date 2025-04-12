@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Pro",
+  "version": "1.0",
+  "description": "Return dislikes, SponsorBlock, dark theme 2.0",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["https://www.youtube.com/*"],
+  "action": {
+    "default_popup": "index.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
