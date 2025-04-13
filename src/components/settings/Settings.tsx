@@ -1,7 +1,61 @@
+import { useEffect, useState } from "react";
+
 const Settings = () => {
+  const [settings, setSettings] = useState({
+    returnDislikes: true,
+    sponsorBlock: true,
+    darkTheme: true,
+  });
+
+  useEffect(() => {
+    chrome.storage.sync.get(
+      ["returnDislikes", "sponsorBlock", "darkTheme"],
+      (data) => {
+        setSettings({
+          returnDislikes: data.returnDislikes ?? true,
+          sponsorBlock: data.sponsorBlock ?? true,
+          darkTheme: data.darkTheme ?? true,
+        });
+      }
+    );
+  }, []);
+
+  const toogleSettings = (key: keyof typeof settings) => {
+    const newValue = !settings[key];
+    setSettings((prev) => ({ ...prev, [key]: newValue }));
+    chrome.storage.sync.set({ [key]: newValue });
+  };
+
   return (
     <div>
-      <p>Lorem ipsum dolor sit.</p>
+      <h1 className="text-2xl font-bold">Settings</h1>
+
+      <div className="flex items-center justify-between gap-5">
+        <p>Return Dislikes</p>
+        <input
+          type="checkbox"
+          checked={settings.returnDislikes}
+          onChange={() => toogleSettings("returnDislikes")}
+        />
+      </div>
+
+      <div className="flex items-center justify-between">
+        <p>SponsorBlock</p>
+        <input
+          type="checkbox"
+          checked={settings.sponsorBlock}
+          onChange={() => toogleSettings("sponsorBlock")}
+        />
+      </div>
+
+      <div className="flex items-center justify-between">
+        <p>Dark theme</p>
+        <input
+          type="checkbox"
+          checked={settings.darkTheme}
+          onChange={() => toogleSettings("darkTheme")}
+        />
+      </div>
     </div>
   );
 };
