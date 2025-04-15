@@ -16,6 +16,10 @@ const Settings = () => {
           sponsorBlock: data.sponsorBlock ?? true,
           darkTheme: data.darkTheme ?? true,
         });
+
+        if (data.returnDislikes === undefined) {
+          chrome.storage.sync.set({ returnDislikes: true });
+        }
       }
     );
   }, []);

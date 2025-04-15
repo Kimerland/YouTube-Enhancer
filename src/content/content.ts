@@ -1,9 +1,23 @@
+console.log("Content script loaded");
+
+chrome.storage.sync.get(["returnDislikes"], (data) => {
+  if (data.returnDislikes === undefined) {
+    chrome.storage.sync.set({ returnDislikes: true }, () => {
+      console.log("returnDislikes set to true");
+    });
+  }
+});
+
 chrome.storage.sync.get(["returnDislikes"], (result) => {
+  console.log("result.returnDislikes");
+
   if (!result.returnDislikes) return;
+  console.log("Dislike feature enabled");
 
   const videoId = getVideoId(window.location.href);
-
   if (!videoId) return;
+
+  console.log("Video ID:", videoId);
 
   fetch(`https://returnyoutubedislikeapi.com/votes?videoId=${videoId}`)
     .then((res) => res.json())
@@ -12,28 +26,43 @@ chrome.storage.sync.get(["returnDislikes"], (result) => {
       if (!dislikes) return;
 
       const interval = setInterval(() => {
-        const buttons = document.querySelectorAll(
-          "yt-spec-button-shape-next yt-spec-button-shape-next--tonal yt-spec-button-shape-next--mono yt-spec-button-shape-next--size-m yt-spec-button-shape-next--icon-button yt-spec-button-shape-next--segmented-end yt-spec-button-shape-next--enable-backdrop-filter-experiment"
-        );
-        const dislikeButton = buttons[1];
+        const button = document.querySelector("dislike-button-view-model");
 
-        if (dislikeButton) {
-          const textElement = dislikeButton.querySelector(
-            "yt-formatted-string"
-          );
-          if (textElement) {
-            textElement.textContent = formatNumber(dislikes);
-            clearInterval(interval);
-          }
+        if (button) {
+          clearInterval(interval);
+
+          button.innerHTML = "";
+
+          // fix styles in the future
+          const wrapper = document.createElement("div");
+          wrapper.style.display = "flex";
+          wrapper.style.alignItems = "center";
+          wrapper.style.gap = "6px";
+          wrapper.style.color = "var(--yt-spec-text-primary)";
+          wrapper.style.fontSize = "14px";
+
+          // replace icon
+          const icon = document.createElement("span");
+          icon.textContent = "👎";
+          icon.style.fontSize = "16px";
+
+          const text = document.createElement("span");
+          text.textContent = formatNumber(dislikes);
+
+          wrapper.appendChild(icon);
+          wrapper.appendChild(text);
+
+          button.appendChild(wrapper);
+
+          console.log("Dislike count updated with icon");
         }
-      });
+      }, 1000);
     });
 });
 
 const getVideoId = (url: string) => {
   try {
     const urlObj = new URL(url);
-
     return urlObj.searchParams.get("v");
   } catch {
     return null;
