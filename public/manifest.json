@@ -16,5 +16,11 @@
       "matches": ["*://www.youtube.com/*"],
       "js": ["content.js"]
     }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["dislikesV1.svg"],
+      "matches": ["<all_urls>"]
+    }
   ]
 }
