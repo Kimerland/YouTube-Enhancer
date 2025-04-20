@@ -1,3 +1,5 @@
+import { observeUrlChange } from "../lib";
+
 console.log("Content script loaded");
 
 let currentVideoId: null | string = null;
@@ -10,16 +12,13 @@ chrome.storage.sync.get(["returnDislikes"], (data) => {
   }
 });
 
-let lastUrl = location.href;
-new MutationObserver(() => {
-  const url = location.href;
-  if (url !== lastUrl) {
-    lastUrl = url;
-    setTimeout(() => {
-      runDislikeFeature();
-    }, 1000);
-  }
-}).observe(document, { subtree: true, childList: true });
+// refactorng
+observeUrlChange(() => {
+  chrome.storage.sync.get(["returnDislikes", "sponsorBlock"], (settings) => {
+    if (settings.returnDislikes) runDislikeFeature();
+    if (settings.sponsorBlock) packSponsor();
+  });
+});
 
 function runDislikeFeature() {
   chrome.storage.sync.get(["returnDislikes"], (result) => {
@@ -76,8 +75,6 @@ function runDislikeFeature() {
   });
 }
 
-runDislikeFeature();
-
 const getVideoId = (url: string) => {
   try {
     const urlObj = new URL(url);
@@ -92,3 +89,58 @@ const formatNumber = (num: number) => {
   if (num >= 1_000) return (num / 1_000).toFixed(1) + "K";
   return num.toString();
 };
+
+// need refactoring
+async function fetchSponsorBlock(videoId: string) {
+  const categories = ["sponsor", "selfpromo", "interaction", "intro", "outro"];
+  const url = `https://sponsor.ajay.app/api/skipSegments?videoID=${videoId}&categories=${JSON.stringify(
+    categories
+  )}`;
+
+  const response = await fetch(url);
+  if (!response.ok) return [];
+
+  return await response.json();
+}
+
+function skipSponsor(player: HTMLVideoElement, segments: [number, number][]) {
+  setInterval(() => {
+    const currentTime = player.currentTime;
+
+    for (const [start, end] of segments) {
+      if (currentTime >= start && currentTime < end) {
+        (player.currentTime = end + 0), 1;
+        break;
+      }
+    }
+  }, 500);
+}
+
+async function packSponsor() {
+  const videoId = getVideoId(location.href);
+  if (!videoId) return;
+
+  const segmentsData = await fetchSponsorBlock(videoId);
+  const segments = segmentsData.map((seg: any) => seg.segment);
+
+  const checkInterval = setInterval(() => {
+    const player = document.querySelector("video") as HTMLVideoElement;
+    if (player) {
+      clearInterval(checkInterval);
+      skipSponsor(player, segments);
+    }
+  }, 1000);
+}
+
+const updatedSponsor = () => {
+  chrome.storage.sync.get(["sponsorBlock"], (result) => {
+    if (!result.sponsorBlock) return;
+
+    packSponsor();
+  });
+};
+
+setTimeout(() => {
+  runDislikeFeature();
+  updatedSponsor();
+}, 1000);

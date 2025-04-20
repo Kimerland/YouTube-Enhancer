@@ -20,6 +20,12 @@ const Settings = () => {
         if (data.returnDislikes === undefined) {
           chrome.storage.sync.set({ returnDislikes: true });
         }
+        if (data.sponsorBlock === undefined) {
+          chrome.storage.sync.set({ sponsorBlock: true });
+        }
+        if (data.darkTheme === undefined) {
+          chrome.storage.sync.set({ darkTheme: true });
+        }
       }
     );
   }, []);
