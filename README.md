@@ -1,54 +1,80 @@
-# React + TypeScript + Vite
+# 🎥 YouTube Pro Extension
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Extension](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdW9vNmhsZ2h4Y3g2NHBoNm12aWdkMzBrZzFrMzJuZWI5b2hoY21jNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/10DbmXp6zjPnH2/giphy.gif)  
 
-Currently, two official plugins are available:
+**YouTube Pro Extension** is a **Chrome Extension** that improves the YouTube experience by adding dislike counters, skipping sponsored segments, and enhancing the dark mode.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📌 Tech Stack  
+- 🛠 **TypeScript + Vite** – Extension logic
+- 🔐 **Tailwind CSS** – fast UI styling 
+- 🧩 **Chrome Extensions API** – Storage, Content Scripts, Messagin 
+- ⚡️ **Manifest V3** – Modern extension standard 
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 📖 Installation  
+
+### 1️⃣ Clone the repository  
+```bash
+git clone https://github.com/Kimerland/YouTube-Enhancer.git
+cd yt-extension
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+### 2️⃣ Install dependencies
+```bash
+npm install
 ```
+
+### 3️⃣ Build the project
+```bash
+npm run build
+```
+
+### 4️⃣ Load into Chrome
+```bash
+Open chrome://extensions
+
+Enable Developer Mode
+
+Click Load Unpacked
+
+Select the /dist folder after build
+```
+
+### ✨ Features
+- 👎 Restore dislike counts under videos
+
+- ⏩ Auto-skip sponsored segments
+
+- 🌙 Improved dark mode for a better experience
+
+- ⚙️ Custom settings page (saved with Chrome Storage)
+
+---
+
+📈 What I Learned
+
+- Deep understanding of Chrome Extensions architecture (Manifest V3, messaging system, content scripts)
+
+- Advanced DOM manipulation and handling dynamic page changes
+
+- Storage synchronization between background and content scripts
+
+- Tailwind CSS customization inside a Chrome extension
+
+- Debugging complex issues like injection timing and race conditions
+
+---
+### 📢 Contact
+
+```bash
+👤 Author: Kimerland
+📧 Email: kimerland.project@gmail.com
+🐙 GitHub: Kimerland
+```
+
+---
+
+### ⭐️ If you like this project, please give it a star!
