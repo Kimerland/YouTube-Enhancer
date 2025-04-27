@@ -1,4 +1,4 @@
-import { getVideoId } from "../model";
+import { getVideoId } from "../lib";
 
 export async function packSponsor() {
   const videoId = getVideoId(location.href);

@@ -14,3 +14,12 @@ export const formatNumber = (num: number) => {
   if (num >= 1_000) return (num / 1_000).toFixed(1) + "K";
   return num.toString();
 };
+
+export const getVideoId = (url: string) => {
+  try {
+    const urlObj = new URL(url);
+    return urlObj.searchParams.get("v");
+  } catch {
+    return null;
+  }
+};

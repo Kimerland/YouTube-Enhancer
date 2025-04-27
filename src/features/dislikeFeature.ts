@@ -1,5 +1,4 @@
-import { formatNumber } from "../lib";
-import { getVideoId } from "../model";
+import { formatNumber, getVideoId } from "../lib";
 
 let currentVideoId: null | string = null;
 
